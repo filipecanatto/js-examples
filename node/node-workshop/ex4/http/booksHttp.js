@@ -11,7 +11,7 @@ var server = http.createServer(function (req, res) {
   	var book = bookService.getbook(title);
 	book.forEach(function (livro) {
 		res.write("<h4>" + livro.title + "</h4>");
-		res.write("<h5>" + livro.autor + "</h5><br/>");
+		res.write("<h5>" + livro.author + "</h5><br/>");
 	});
 	res.end();
 });
