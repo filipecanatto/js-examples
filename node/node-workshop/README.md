@@ -1,0 +1,1 @@
+This repository contains the implementatios of exercises described at 'github.com/rodrigobranas/node-workshop'
