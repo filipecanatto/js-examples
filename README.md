@@ -1,1 +1,1 @@
-"# js-examples" 
+This repository exisists to store annotations and POC`s (Prove Of Concepts) about javascript programming language in both front-end and back-end
