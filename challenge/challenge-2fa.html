@@ -1,167 +1,137 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Hello, world!</title>
-  </head>
-  <body class="container">
-    <h1>Hello, world!</h1>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <div class="clearfix">
-        <label>QR Code</label>
-        <div class="input"><img id="qrImg" src="" /></div>
+  <title>Hello, world!</title>
+</head>
+
+<body class="container">
+  <h1>Hello, world!</h1>
+
+  <div class="clearfix">
+    <label>QR Code</label>
+    <div class="input"><img id="qrImg" src="" /></div>
+  </div>
+  <br>
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="defaultIndeterminate2">
+    <label class="custom-control-label" for="defaultIndeterminate2">Código capturado.</label>
+  </div>
+
+  <br>
+  <form>
+    <div class="form-group">
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+        placeholder="Enter email">
     </div>
-
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" id="defaultIndeterminate2" >
-      <label class="custom-control-label" for="defaultIndeterminate2">Default indeterminate</label>
+    <div class="form-group">
+      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
     </div>
+    <div class="form-group">
+      <input type="number" class="form-control" id="6digitCode" placeholder="Código" maxlength="6">
+    </div>
+    <button onclick="callAPI()" type="submit" class="btn btn-primary">Consulta CEP</button>
 
-    <br>
-    <form>
-      <div class="form-group">
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
-      <div class="form-group">
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-      </div>
-      <div class="form-group">
-        <input type="number" class="form-control" id="6digitCode" placeholder="Código" maxlength="6">
-      </div>
-      <button onclick="callAPI()" type="submit" class="btn btn-primary">Consulta CEP</button>
-    </form>
+  </form>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jssha@1.6.0/src/sha.min.js"></script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jssha@1.6.0/src/sha.min.js"></script>
+  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script src="js/totp.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/mock.js"></script>
 
-<script>
+  <script>
 
+    function randomStr(len, arr) {
+      var ans = '';
+      for (var i = len; i > 0; i--) {
+        ans +=
+          arr[Math.floor(Math.random() * arr.length)];
+      }
+      return ans;
+    }
 
+    function callAPI() {
 
+      if (validate()) {
+        return
+      }
 
+      var service = "http://api.postmon.com.br/v1/cep/";
+      var cep = "04101-300";
 
-function callAPI() {
-  console.log('ajax')
-  // ajax call
-var	servico	=	"http://api.postmon.com.br/v1/cep/";
-var	cep	=	"04101-300";
+      function onCepDone(data) {
+        alert("A	Casa	do	Código	fica	na	" + data.logradouro);
 
-function	onCepDone(data) {
-    alert("A	Casa	do	Código	fica	na	"	+	data.logradouro);
-    
-}
+      }
 
+      $.getJSON(service + cep)
+        .done(onCepDone);
+    }
 
-$.getJSON(servico	+	cep)
-		.done(onCepDone);
-}
-
-// $('#defaultIndeterminate2').prop('checked');
-
-
-$("form").submit(function(e){
-        e.preventDefault();
-    });
-
-
-    console.log(randomStr(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'))
+    // $('#defaultIndeterminate2').prop('checked');
 
     var secret = randomStr(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
-
     $('#qrImg').attr('src', 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/user@host.com%3Fsecret%3D' + secret);
 
-    function randomStr(len, arr) { 
-            var ans = ''; 
-            for (var i = len; i > 0; i--) { 
-                ans +=  
-                  arr[Math.floor(Math.random() * arr.length)]; 
-            } 
-            return ans; 
+    var totpObj = new TOTP();
+    var otp = totpObj.getOTP(secret);
+
+    function validate() {
+      email = $('#exampleInputEmail1').prop('value')
+      password = $('#exampleInputPassword1').prop('value')
+      sixDigitCode = $('#6digitCode').prop('value')
+
+      console.log('validando... email: ' + email + ' password: ' + password + ' ' + 'codigo: ' + sixDigitCode)
+
+      user_table.map(e => {
+        if (e.email != email) {
+          alert('email invalido')
+          return false
         }
+        if (e.password != password) {
+          alert('senha invalida')
+          return false
+        }
+        if (e.sixDigitCode != sixDigitCode) {
+          alert('codigo invalido')
+          return false
+        }
+      })
 
-
-
-
-        TOTP = function() {
-
-var dec2hex = function(s) {
-    return (s < 15.5 ? "0" : "") + Math.round(s).toString(16);
-};
-
-var hex2dec = function(s) {
-    return parseInt(s, 16);
-};
-
-var leftpad = function(s, l, p) {
-    if(l + 1 >= s.length) {
-        s = Array(l + 1 - s.length).join(p) + s;
+      return true
     }
-    return s;
-};
 
-var base32tohex = function(base32) {
-    var base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-    var bits = "";
-    var hex = "";
-    for(var i = 0; i < base32.length; i++) {
-        var val = base32chars.indexOf(base32.charAt(i).toUpperCase());
-        bits += leftpad(val.toString(2), 5, '0');
+  </script>
+
+
+  <style>
+    #qrcode {
+      width: 160px;
+      height: 160px;
+      margin-top: 15px;
     }
-    for(var i = 0; i + 4 <= bits.length; i+=4) {
-        var chunk = bits.substr(i, 4);
-        hex = hex + parseInt(chunk, 2).toString(16) ;
-    }
-    return hex;
-};
-
-this.getOTP = function(secret) {
-    try {
-        var epoch = Math.round(new Date().getTime() / 1000.0);
-        var time = leftpad(dec2hex(Math.floor(epoch / 30)), 16, "0");
-        var hmacObj = new jsSHA(time, "HEX");
-        var hmac = hmacObj.getHMAC(base32tohex(secret), "HEX", "SHA-1", "HEX");
-        var offset = hex2dec(hmac.substring(hmac.length - 1));
-        var otp = (hex2dec(hmac.substr(offset * 2, 8)) & hex2dec("7fffffff")) + "";
-        otp = (otp).substr(otp.length - 6, 6);
-    } catch (error) {
-        throw error;
-    }
-    return otp;
-};
-
-}
-
-
-
-var totpObj = new TOTP();
-var otp = totpObj.getOTP(secret);
-
-
-</script>
-
-
-<style>
-
-#qrcode {
-  width:160px;
-  height:160px;
-  margin-top:15px;
-}
-</style>
+  </style>
 
 
 </body>
+
 </html>
