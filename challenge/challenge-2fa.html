@@ -99,7 +99,7 @@
     // get the Token object
     var Token = new Token();
 
-    // generate session secret
+    // generate the session secret
     var secret = randomStr(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
     $('#qrImg').attr('src', 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/user@host.com%3Fsecret%3D' + secret);
 
