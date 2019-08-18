@@ -20,11 +20,7 @@
     <label>QR Code</label>
     <div class="input"><img id="qrImg" src="" /></div>
   </div>
-  <br>
-  <div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" id="defaultIndeterminate2">
-    <label class="custom-control-label" for="defaultIndeterminate2">Código capturado.</label>
-  </div>
+
 
   <br>
   <form>
@@ -71,7 +67,7 @@
 
     function callAPI() {
 
-      if (validate()) {
+      if (!validate()) {
         return
       }
 
@@ -99,25 +95,27 @@
       email = $('#exampleInputEmail1').prop('value')
       password = $('#exampleInputPassword1').prop('value')
       sixDigitCode = $('#6digitCode').prop('value')
+      valid = false
 
       console.log('validando... email: ' + email + ' password: ' + password + ' ' + 'codigo: ' + sixDigitCode)
 
       user_table.map(e => {
         if (e.email != email) {
           alert('email invalido')
-          return false
         }
-        if (e.password != password) {
+        else if (e.password != password) {
           alert('senha invalida')
-          return false
         }
-        if (e.sixDigitCode != sixDigitCode) {
+        else if (sixDigitCode != totpObj.getOTP(secret)) {
+          console.log(totpObj.getOTP(secret))
+          console.log(sixDigitCode)
           alert('codigo invalido')
-          return false
+        }else{
+          valid = true
         }
       })
 
-      return true
+      return valid
     }
 
   </script>

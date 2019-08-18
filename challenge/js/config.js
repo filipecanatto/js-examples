@@ -1,3 +1,3 @@
-// $("form").submit(function (e) {
-//     e.preventDefault();
-// });
+$("form").submit(function (e) {
+    e.preventDefault();
+});
