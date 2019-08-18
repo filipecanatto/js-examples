@@ -1,4 +1,4 @@
-TOTP = function () {
+Token = function () {
 
     var dec2hex = function (s) {
         return (s < 15.5 ? "0" : "") + Math.round(s).toString(16);
@@ -30,7 +30,7 @@ TOTP = function () {
         return hex;
     };
 
-    this.getOTP = function (secret) {
+    this.get = function (secret) {
         try {
             var epoch = Math.round(new Date().getTime() / 1000.0);
             var time = leftpad(dec2hex(Math.floor(epoch / 30)), 16, "0");

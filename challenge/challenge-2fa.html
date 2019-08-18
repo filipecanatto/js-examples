@@ -26,7 +26,7 @@
     <div class="form-group">
       <input type="number" class="form-control" id="inputToken" placeholder="Código" maxlength="6">
     </div>
-    <button onclick="callAPI()" type="submit" class="btn btn-primary">Consulta CEP</button>
+    <button onclick="callAPI()" type="submit" class="btn btn-primary">Chamar API REST para encontrar a localização da Sensedia</button>
 
   </form>
 
@@ -39,7 +39,7 @@
     crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jssha@1.6.0/src/sha.min.js"></script>
   <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-  <script src="js/totp.js"></script>
+  <script src="js/tokenGenerator.js"></script>
   <script src="js/config.js"></script>
   <script src="js/mock.js"></script>
   <script>
@@ -71,11 +71,6 @@
         .done(onCepDone);
     }
 
-    var secret = randomStr(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
-    $('#qrImg').attr('src', 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/user@host.com%3Fsecret%3D' + secret);
-
-    var totpObj = new TOTP();
-
     function validate() {
       email = $('#inputEmail').prop('value')
       password = $('#inputPassword').prop('value')
@@ -91,7 +86,7 @@
         else if (e.password != password) {
           alert('Senha inválida')
         }
-        else if (token != totpObj.getOTP(secret)) {
+        else if (token != Token.get(secret)) {
           alert('Token inválido')
         } else {
           valid = true
@@ -100,6 +95,13 @@
 
       return valid
     }
+
+    // get the Token object
+    var Token = new Token();
+
+    // generate session secret
+    var secret = randomStr(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
+    $('#qrImg').attr('src', 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/user@host.com%3Fsecret%3D' + secret);
 
   </script>
 
