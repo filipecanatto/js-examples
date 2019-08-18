@@ -2,15 +2,11 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-  <title>Hello, world!</title>
+  <title>Two-Factor Authentication (2FA) Example</title>
 </head>
 
 <body class="container">
@@ -19,26 +15,21 @@
   <div class="clearfix">
     <div class="input"><img id="qrImg" src="" /></div>
   </div>
-
-
   <br>
   <form>
     <div class="form-group">
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-        placeholder="Enter email">
+      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
     </div>
     <div class="form-group">
-      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      <input type="password" class="form-control" id="inputPassword" placeholder="Senha">
     </div>
     <div class="form-group">
-      <input type="number" class="form-control" id="6digitCode" placeholder="Código" maxlength="6">
+      <input type="number" class="form-control" id="inputToken" placeholder="Código" maxlength="6">
     </div>
     <button onclick="callAPI()" type="submit" class="btn btn-primary">Consulta CEP</button>
 
   </form>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -46,15 +37,14 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jssha@1.6.0/src/sha.min.js"></script>
   <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   <script src="js/totp.js"></script>
   <script src="js/config.js"></script>
   <script src="js/mock.js"></script>
-
   <script>
 
+    // generate a random string
     function randomStr(len, arr) {
       var ans = '';
       for (var i = len; i > 0; i--) {
@@ -64,52 +54,46 @@
       return ans;
     }
 
+    // call service
     function callAPI() {
 
       if (!validate()) {
         return
       }
-
       var service = "http://api.postmon.com.br/v1/cep/";
-      var cep = "04101-300";
+      var cep = "13086-510";
 
       function onCepDone(data) {
-        alert("A	Casa	do	Código	fica	na	" + data.logradouro);
+        alert("A	Sensedia esta localizada em:	" + data.logradouro);
 
       }
-
       $.getJSON(service + cep)
         .done(onCepDone);
     }
-
-    // $('#defaultIndeterminate2').prop('checked');
 
     var secret = randomStr(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
     $('#qrImg').attr('src', 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/user@host.com%3Fsecret%3D' + secret);
 
     var totpObj = new TOTP();
-    var otp = totpObj.getOTP(secret);
 
     function validate() {
-      email = $('#exampleInputEmail1').prop('value')
-      password = $('#exampleInputPassword1').prop('value')
-      sixDigitCode = $('#6digitCode').prop('value')
+      email = $('#inputEmail').prop('value')
+      password = $('#inputPassword').prop('value')
+      token = $('#inputToken').prop('value')
       valid = false
 
-      console.log('validando... email: ' + email + ' password: ' + password + ' ' + 'codigo: ' + sixDigitCode)
+      console.log('validando... email: ' + email + ' password: ' + password + ' ' + 'codigo: ' + token)
 
       user_table.map(e => {
         if (e.email != email) {
-          alert('email invalido')
+          alert('Email inválido')
         }
         else if (e.password != password) {
-          alert('senha invalida')
+          alert('Senha inválida')
         }
-        else if (sixDigitCode != totpObj.getOTP(secret)) {
-          console.log(totpObj.getOTP(secret))
-          console.log(sixDigitCode)
-          alert('codigo invalido')
-        }else{
+        else if (token != totpObj.getOTP(secret)) {
+          alert('Token inválido')
+        } else {
           valid = true
         }
       })
@@ -128,11 +112,10 @@
     }
 
     @media (min-width: 1200px) {
-    .container{
+      .container {
         max-width: 770px;
+      }
     }
-}
-
   </style>
 
 
