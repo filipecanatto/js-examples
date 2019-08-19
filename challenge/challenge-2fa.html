@@ -26,7 +26,7 @@
     <div class="form-group">
       <input type="number" class="form-control" id="inputToken" placeholder="Código" maxlength="6">
     </div>
-    <button onclick="callAPI()" type="submit" class="btn btn-primary">Chamar API REST para encontrar a localização da Sensedia</button>
+    <button onclick="callAPI()" type="submit" class="btn btn-primary">Chamar API Restfull para consultar o valor do dolar</button>
 
   </form>
 
@@ -60,15 +60,14 @@
       if (!validate()) {
         return
       }
-      var service = "http://api.postmon.com.br/v1/cep/";
-      var cep = "13086-510";
+      var service = "https://economia.awesomeapi.com.br/all/USD-BRL";
+      var currency = "USD-BRL";
 
-      function onCepDone(data) {
-        alert("A	Sensedia esta localizada em:	" + data.logradouro);
-
+      function processResult(data) {
+        alert("Valor do dolar hoje: " + data.USD.ask);
       }
-      $.getJSON(service + cep)
-        .done(onCepDone);
+      $.getJSON(service)
+        .done(processResult);
     }
 
     function validate() {
